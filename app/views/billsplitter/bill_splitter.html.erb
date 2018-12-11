@@ -1,0 +1,29 @@
+<h1>Bill Splitter</h1>
+
+<%= form_tag(process_bill_splitter_path) do %>
+
+    <div>
+        <%= label_tag(:amount) %> <br>
+        <%= text_field_tag(:amount) %>
+    </div>
+    <div>
+        <%= label_tag(:tax) %> <br>
+        <%= text_field_tag(:tax) %>    
+    </div>
+    <div>
+        <%= label_tag(:tip) %> <br>
+        <%= text_field_tag(:tip) %>
+    </div>
+    <div>
+        <%= label_tag(:num_people) %> <br>
+        <%= text_field_tag(:num_people) %>
+    </div> <br>
+
+    <%= submit_tag("Calculate") %> <br> <br>
+
+    <% if @result %>
+    <div>
+        Each person would be paying <%= @result %> <br>
+    </div>
+    <% end %>
+<% end %>

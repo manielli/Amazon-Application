@@ -29,5 +29,10 @@ module AmazonApplication
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+    config.generators.system do |g|
+      g.helper = false
+
+      g.assets = false
+    end
   end
 end

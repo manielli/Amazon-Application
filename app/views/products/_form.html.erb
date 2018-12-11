@@ -1,0 +1,25 @@
+<%= form_with(model: @product, local: true) do |form| %>
+
+<% if @product.errors.present? %>
+    <p class="form-errors">
+        <%= @product.errors.full_messages.join(", ") %>
+    </p>
+<% end %>
+
+<div>
+    <%= form.label :title %> <br>
+    <%= form.text_field :title %>
+</div>
+
+<div>
+    <%= form.label :description %> <br>
+    <%= form.text_area :description, coles: 50, rows: 10 %>
+</div>
+
+<div>
+    <%= form.label :price %>
+    <%= form.text_field :price%>
+</div>
+
+    <%= form.submit %>
+<% end %>

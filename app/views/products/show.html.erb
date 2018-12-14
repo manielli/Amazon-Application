@@ -14,7 +14,6 @@
             "Edit",
             edit_product_path(@product.id)
         ) %>
-
         <%= link_to(
             "Delete",
             product_path,
@@ -25,3 +24,52 @@
         ) %>
     </small>
 </div>
+
+<h5>Submit your review here:</h5>
+
+<%= form_with(model: [@product, @review], local: true) do |f| %>
+
+    <div>
+        <%= f.text_area(
+            :body,
+            cols: 50,
+            rows: 10,
+            placeholder: "What do you think of this strain?"
+        ) %>
+    </div> <h5>Start rating (1 to 5 only):</h5>
+        <%= f.text_field (
+            :rating
+        ) %>
+    <div>
+
+    </div>
+    <%= f.submit "Review" %>
+<% end %>
+
+<h2>Reviews</h2>
+<ul class="review-list">
+<% @reviews.each do |review| %>
+
+    <li>
+        
+        <p> <%= review.body %>
+        
+        <%= link_to(
+            "Delete",
+            product_review_path(@product.id, review.id),
+            method: :delete,
+            data: { confirm: "Are you sure you want to retract your amazing review of the #{@product.title} strain?"}
+        ) %>
+        </p> <br>
+        
+        <small> Reviewed <%= time_ago_in_words(review.created_at) %> ago </small>
+        •
+        <small> Rated at <%= review.rating %> </small>
+        <% if review.user_id %>
+        •
+        <small> Reviewed by: <%= "#{review.user.first_name} #{review.user.last_name}" %></small>
+        <% end %>
+    </li>
+<% end %>
+
+</ul>

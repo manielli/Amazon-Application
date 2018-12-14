@@ -20,11 +20,29 @@
         |
         <%= link_to("Bill Splitter", bill_splitter_path) %>
         |
+        <% if user_signed_in? %>
         <%= link_to("New Product", new_product_path)%>
         |
+        <% end %>
         <%= link_to("Products", products_path) %>
+        <% if user_signed_in? %>
+          | 
+          Hi <%= current_user.first_name %>, <%= link_to("Log out", session_path, method: :delete, data: { confirm: "Are you sure you want to Log Out?"}) %>
+        <% else %>
+          |
+          <%= link_to("Sign In", new_session_path) %>
+          |
+          <%= link_to("Sign Up", new_user_path) %>
+        <% end %>
       </nav>
      </header>
+
+      <% flash.each do |type, message| %>
+        <div class="flash flash-<%= type %>" >
+          <%= message %>
+        </div>
+      <% end %>
+
     <%= yield %>
   </body>
 </html>

@@ -1,4 +1,23 @@
 class Product < ApplicationRecord
+    has_many(:reviews, dependent: :destroy)
+
+    # reviews
+    # reviews<<(object, ...)
+    # reviews.delete(object, ...)
+    # reviews.destroy(object, ...)
+    # reviews=(objects)
+    # review_ids
+    # review_ids=(ids)
+    # reviews.clear
+    # reviews.empty?
+    # reviews.size
+    # reviews.find(...)
+    # reviews.where(...)
+    # reviews.exists?(...)
+    # reviews.build(attributes = {}, ...)
+    # reviews.create(attributes = {})
+    # reviews.create!(attributes = {})
+    # reviews.reload
 
     validates(
         :title,
@@ -36,12 +55,25 @@ class Product < ApplicationRecord
     
 
 
+    def self.all_with_review_counts
+        self
+            .left_outer_joins(:reviews)
+            .select("products.*", "COUNT(reviews.*) AS reviews_count")
+            .group("products.id")
+    end
+
     def self.search str
          
         if self.where("title ILIKE ?","#{str}")
-            self.where("title ILIKE ?","#{str}").each { |product| new_hit_count = product.hit_count + 1; product.update(hit_count: new_hit_count) }
+            self
+                .where("title ILIKE ?","#{str}")
+                .each { |product| 
+                    new_hit_count = product.hit_count + 1; 
+                    product.update(hit_count: new_hit_count) 
+                }
         end
-        self.where("title || description ILIKE ?","%#{str}%") || self.where("description ILIKE ?", "%#{str}%")
+        self
+            .where("title || description ILIKE ?","%#{str}%") || self.where("description ILIKE ?", "%#{str}%")
     end
     
     private

@@ -6,7 +6,12 @@
             <%= link_to(product.title, product_path(product.id)) %>
             <small>
             Price: $<%= product.price %>CAD
-            </small> <br>
+            </small>
+            <br>
+            <small>
+            Reviewed <%= pluralize(product.reviews_count, "time") %>
+            </small>
+            <br>
         </li>
     <% end %>
 </ul>

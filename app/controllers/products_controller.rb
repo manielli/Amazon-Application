@@ -1,6 +1,7 @@
 class ProductsController < ApplicationController
-    before_action :find_product, only: [:show, :edit, :destroy]
+    before_action :find_product, only: [:show, :edit, :destroy, :update]
     before_action :authenticate_user!, except: [:index, :show]
+    before_action :authorize_user!, only: [:edit, :update, :destroy]
 
     def new
         @product = Product.new
@@ -17,7 +18,7 @@ class ProductsController < ApplicationController
         end
     end
     
-    def index 
+    def index
         @products = Product.all_with_review_counts.order(created_at: :desc)
     end
 
@@ -43,7 +44,7 @@ class ProductsController < ApplicationController
     end
 
     def update
-        @product = Product.find params[:id]
+        # @product = Product.find params[:id]
 
 
         @product.attributes = product_params
@@ -63,5 +64,12 @@ class ProductsController < ApplicationController
 
     def find_product
         @product = Product.find params[:id]
+    end
+
+    def authorize_user!
+        unless can?(:crud, @product)
+            flash[:danger] = "Access Denied!"
+            redirect_to product_path(@product)
+        end
     end
 end

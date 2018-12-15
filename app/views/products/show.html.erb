@@ -8,12 +8,20 @@
     </small>
 </div>
 
+<p>
+    Created by: <%= @product.user&.full_name || "Delete" %>
+</p>
+
 <div>
     <small>
+        <% if can?(:edit, @product) %>
         <%= link_to(
             "Edit",
             edit_product_path(@product.id)
         ) %>
+        <% end %>
+
+        <% if can?(:delete, @product) %>
         <%= link_to(
             "Delete",
             product_path,
@@ -22,12 +30,19 @@
                 confirm: "Are you sure you want to get rid of this product?\nThe health benefits are extraordinary"
             }
         ) %>
+        <% end %>
     </small>
 </div>
 
 <h5>Submit your review here:</h5>
 
 <%= form_with(model: [@product, @review], local: true) do |f| %>
+
+    <% if @product.errors.present? %>
+        <p class="form-errors" >
+            <%= @product.errors.full_messages.join(", ") %>
+        </p>
+    <% end %>
 
     <div>
         <%= f.text_area(
@@ -51,24 +66,34 @@
 <% @reviews.each do |review| %>
 
     <li>
-        
-        <p> <%= review.body %>
-        
-        <%= link_to(
-            "Delete",
-            product_review_path(@product.id, review.id),
-            method: :delete,
-            data: { confirm: "Are you sure you want to retract your amazing review of the #{@product.title} strain?"}
-        ) %>
-        </p> <br>
-        
-        <small> Reviewed <%= time_ago_in_words(review.created_at) %> ago </small>
-        •
-        <small> Rated at <%= review.rating %> </small>
-        <% if review.user_id %>
-        •
-        <small> Reviewed by: <%= "#{review.user.first_name} #{review.user.last_name}" %></small>
-        <% end %>
+        <strong> <%= review.user.full_name %> reviewed: </strong> <br>
+        <p> 
+            <%= review.body %>
+            <% if can?(:delete, review) %>
+                <small>
+            
+                    <%= link_to(
+                        "Delete",
+                        product_review_path(@product.id, review.id),
+                        method: :delete,
+                        data: { 
+                            confirm: "Are you sure you want to retract your amazing review of the #{@product.title} strain?"
+                        }
+                    ) %>
+            
+                </small>
+                •
+            <% end %>
+            
+            <small> Reviewed <%= time_ago_in_words(review.created_at) %> ago </small>
+            •
+            <small> Rated at <%= review.rating %> </small>
+            <% if review.user_id %>
+            •
+            <small> Reviewed by: <%= "#{review.user.first_name} #{review.user.last_name}" %></small>
+            <% end %>
+
+        </p>
     </li>
 <% end %>
 

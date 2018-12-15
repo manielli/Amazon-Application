@@ -1,5 +1,6 @@
 class Product < ApplicationRecord
     has_many(:reviews, dependent: :destroy)
+    belongs_to :user
 
     # reviews
     # reviews<<(object, ...)
@@ -31,7 +32,8 @@ class Product < ApplicationRecord
             greater_than_or_equal_to: 0
         }
     )
-
+    
+    # Doesn't work
     # validates(
     #     :sale_price,
     #     numericality: {

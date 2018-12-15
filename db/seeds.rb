@@ -39,7 +39,8 @@ users = User.all
     p = Product.create(
     title: Faker::Cannabis.strain,
     description: Faker::Cannabis.health_benefit,
-    price: rand(1_00)
+    price: rand(1_00),
+    user: users.sample
     )
 
     if p.valid?

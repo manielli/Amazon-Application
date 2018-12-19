@@ -1,7 +1,7 @@
 class ProductsController < ApplicationController
     before_action :find_product, only: [:show, :edit, :destroy, :update]
-    before_action :authenticate_user!, except: [:index, :show]
-    before_action :authorize_user!, only: [:edit, :update, :destroy]
+    before_action :authenticate_user!, except: [:index, :show, :panel]
+    before_action :authorize_user!, only: [:edit, :update, :destroy, :panel]
 
     def new
         @product = Product.new
@@ -56,6 +56,16 @@ class ProductsController < ApplicationController
 
         @product.update_columns(sale_price: @product.price)
     end
+
+    # def panel
+    #     @products = Product.all
+    #     @products_count = @products.count
+    #     @reviews = Review.all
+    #     @reviews_count = @reviews.count
+    #     @users = User.all
+    #     @users_count = @users.count
+
+    # end
 
     private
     def product_params

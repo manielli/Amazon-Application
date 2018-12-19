@@ -20,13 +20,17 @@
         |
         <%= link_to("Bill Splitter", bill_splitter_path) %>
         |
+        
         <% if user_signed_in? %>
-        <%= link_to("New Product", new_product_path)%>
-        |
+          <%= link_to("New Product", new_product_path)%>
+          |
         <% end %>
+        
         <%= link_to("Products", products_path) %>
         <% if user_signed_in? %>
-          | 
+          <%# | %>
+          <%#= link_to( "Administrators Panel", admins_panel_path ) %>
+          <%# | %> 
           Hi <%= current_user.first_name %>, 
           
           <%= link_to(
@@ -35,14 +39,15 @@
             method: :delete, 
             data: { 
               confirm: "Are you sure you want to Log Out?"
-            }) %>
+          }) %>
 
-        <% else %>
+          <% else %>
           |
           <%= link_to("Sign In", new_session_path) %>
           |
           <%= link_to("Sign Up", new_user_path) %>
         <% end %>
+
       </nav>
      </header>
 

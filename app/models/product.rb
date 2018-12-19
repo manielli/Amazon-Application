@@ -1,6 +1,7 @@
 class Product < ApplicationRecord
-    has_many(:reviews, dependent: :destroy)
     belongs_to :user
+    
+    has_many(:reviews, dependent: :destroy)
 
     # reviews
     # reviews<<(object, ...)
@@ -47,15 +48,14 @@ class Product < ApplicationRecord
         length: { minimum: 10 }
     )
 
+    before_validation(:set_default_hit_count)
+    before_validation(:set_default_price)
     validate(:no_reserved_name)
     validate(:sets_sale_price)
     validate(:sale_price_less_than_price)
-    before_validation(:set_default_hit_count)
-    before_validation(:set_default_price)
     after_validation(:sets_sale_price)
     before_save(:capitalize)
     
-
 
     def self.all_with_review_counts
         self
@@ -74,8 +74,7 @@ class Product < ApplicationRecord
                     product.update(hit_count: new_hit_count) 
                 }
         end
-        self
-            .where("title || description ILIKE ?","%#{str}%") || self.where("description ILIKE ?", "%#{str}%")
+        self.where("title || description ILIKE ?","%#{str}%") || self.where("description ILIKE ?", "%#{str}%")
     end
     
     private

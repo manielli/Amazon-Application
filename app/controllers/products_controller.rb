@@ -47,14 +47,14 @@ class ProductsController < ApplicationController
         # @product = Product.find params[:id]
 
 
-        @product.attributes = product_params
-        if @product.save(validate: false)
+        # @product.attributes = product_params
+        if @product.save#(validate: false)
             redirect_to product_path(@product.id)
         else
             render :edit
         end
 
-        @product.update_columns(sale_price: @product.price)
+        # @product.update_columns(sale_price: @product.price)
     end
 
     # def panel

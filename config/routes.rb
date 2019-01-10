@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :news_articles#, only: [:new, :create, :show, :destroy, :index]
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   resource :session, only: [:new, :create, :destroy]

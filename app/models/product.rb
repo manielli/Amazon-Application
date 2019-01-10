@@ -50,8 +50,8 @@ class Product < ApplicationRecord
 
     before_validation(:set_default_hit_count)
     before_validation(:set_default_price)
+    before_validation(:sets_sale_price)
     validate(:no_reserved_name)
-    validate(:sets_sale_price)
     validate(:sale_price_less_than_price)
     after_validation(:sets_sale_price)
     before_save(:capitalize)

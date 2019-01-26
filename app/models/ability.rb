@@ -2,6 +2,7 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
+    
     # Define abilities for the passed in user here. For example:
     #
     user ||= User.new # guest user (not logged in)
@@ -29,7 +30,7 @@ class Ability
     # See the wiki for details:
     # https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities
 
-    alias_action(:create, :read, :edit, :update, :delete, :destroy, to: :crud)
+    alias_action(:create, :read, :edit, :update, :delete, to: :crud)
 
     can(:crud, Product) do |product|
       product.user == user
@@ -41,6 +42,14 @@ class Ability
     
     can(:crud, NewsArticle) do |news_article|
       news_article.user == user
+    end
+
+    can(:favourite, Product) do |product|
+      user.persisted? && product.user != user
+    end
+
+    can(:destroy, Favourite ) do |favourite|
+      favourite.user == user
     end
   end
 end

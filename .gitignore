@@ -13,6 +13,8 @@
 !/log/.keep
 !/tmp/.keep
 
+/config/initializers/app_keys.rb
+
 # Ignore uploaded files in development
 /storage/*
 !/storage/.keep

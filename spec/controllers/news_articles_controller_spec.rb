@@ -78,13 +78,23 @@ RSpec.describe NewsArticlesController, type: :controller do
                     news_article = NewsArticle.last
                     expect(response).to(redirect_to(news_article_url(news_article.id)))
                 end
+
+                it "associates the current user to the created news article" do
+                    valid_request
+
+                    news_article = NewsArticle.last
+                    expect(news_article.user).to eq(current_user)
+                end
             end
         
     
             
             context "with invalid parameters" do
                 def invalid_request
-                    post(:create, params: { news_article: FactoryBot.attributes_for(:news_article, title: nil) } )    
+                    post(
+                        :create, 
+                        params: { news_article: FactoryBot.attributes_for(:news_article, title: nil) } 
+                    )    
                 end
     
                 it "doesn't create a news article" do
@@ -165,13 +175,13 @@ RSpec.describe NewsArticlesController, type: :controller do
 
             context "as owner" do
                 it "removes a news article from the db" do
-                    news_article = FactoryBot.create(:news_article)
+                    news_article = FactoryBot.create(:news_article, user: current_user)
                     delete(:destroy, params: { id: news_article.id } )
                     expect(NewsArticle.find_by(id: news_article.id)).to be(nil)
                 end
         
                 it "redirects to the news article index" do
-                    news_article = FactoryBot.create(:news_article)
+                    news_article = FactoryBot.create(:news_article, user: current_user)
                     delete(:destroy, params: { id: news_article.id } )
                     expect(response).to redirect_to(news_articles_url)
                 end
@@ -200,17 +210,17 @@ RSpec.describe NewsArticlesController, type: :controller do
 
     describe "#edit" do
         context "without signed in user" do
-            # it "redirects the user to the sign up or sign in page" do
-            #     news_article = FactoryBot.create(:news_article)
-            #     get(:edit, params: { id: news_article.id })
+            it "redirects the user to the sign up or sign in page" do
+                news_article = FactoryBot.create(:news_article)
+                get(:edit, params: { id: news_article.id } )
+                expect(response).to redirect_to(new_session_path)
+            end
 
-            #     if 
-            #         expect(response).to redirect_to(new_session_path)
-            #     else
-            #         expect(response).to redirect_to()
-            #     end
-            # end
-
+            it "sets a sign up or sign in flash message" do
+                news_article = FactoryBot.create(:news_article)
+                get(:edit, params: { id: news_article.id })
+                expect(flash[:danger]).to be
+            end
         end
         
         context "with signed in user" do
@@ -219,18 +229,32 @@ RSpec.describe NewsArticlesController, type: :controller do
             end
 
             context "as non-owner" do
-                
-                # it "redirects the user to the root page" do
+                # it "doesn't edit a news article" do
+                #     news_article = FactoryBot.create(:news_article)
+
+                #     get(:edit, params: {id: news_article.id})
+
+                #     new_title = "#{news_article.title} Edited" # Note this Updated word is capitalized because of titleized method
+                #     new_description = "#{news_article.description} Edited"
+
+                #     patch(:update, params: { id: news_article.id, news_article: { title: new_title, description: new_description } } )
+
+
+                #     # expect(assigns(:news_article).title).to eq(new_title)
+                #     # expect(assigns(:news_article).description).to eq(new_description)
+
+                #     expect(NewsArticle.find_by(id: news_article.id)).to eq(news_article)
+                # end
+
+                # it "redirects to the news article root page" do
                 #     news_article = FactoryBot.create(:news_article)
                 #     get(:edit, params: { id: news_article.id })
-
-                #     expect(response).to redirect_to(news_article.id)
+                #     expect(response).to redirect_to(root_url)
                 # end
 
                 # it "flashes a danger message" do 
                 #     news_article = FactoryBot.create(:news_article)
                 #     get(:edit, params: { id: news_article.id })
-
                 #     expect(flash[:danger]).to be
                 # end
 
@@ -238,23 +262,22 @@ RSpec.describe NewsArticlesController, type: :controller do
 
             context "as owner" do
                 it "renders the show page of that news article" do
-                    news_article = FactoryBot.create(:news_article)
+                    news_article = FactoryBot.create(:news_article, user: current_user)
                     get(:edit, params: { id: news_article.id } )
                     expect(response).to(render_template(:edit))
                 end
         
                 it "sets an instance variable with an edited news article" do
-                    news_article = FactoryBot.create(:news_article)
+                    news_article = FactoryBot.create(:news_article, user: current_user)
                     get(:edit, params: { id: news_article.id } )
+
                     expect(assigns(:news_article)).to eq(news_article)
                 end
 
                 # it "renders the edit template" do
-                
                 # end
 
                 # it "assign an instance variable to the news_article being edited" do
-
                 # end
             end
         end

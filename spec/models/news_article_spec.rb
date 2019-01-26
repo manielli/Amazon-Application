@@ -84,7 +84,6 @@ RSpec.describe NewsArticle, type: :model do
       n.valid?
       expect(n).to be_invalid
     end
-
   end
 
   describe '#titleized_title' do

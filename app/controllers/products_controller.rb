@@ -12,6 +12,7 @@ class ProductsController < ApplicationController
         @product.user = current_user
 
         if @product.save
+            ProductMailer.new_product(@product).deliver_later
             redirect_to product_path(@product.id)
         else
             render :new
@@ -19,14 +20,27 @@ class ProductsController < ApplicationController
     end
     
     def index
-        @products = Product.all_with_review_counts.order(created_at: :desc)
+        if params[:tag]
+            @tag = Tag.find_or_initialize_by(name: params[:tag])
+            @products = @tag.products.all_with_review_counts.order(created_at: :desc)
+        else
+            @products = Product.all_with_review_counts.order(created_at: :desc)
+        end
+
+        respond_to do |format|
+            format.html { render :index }
+            format.json { render json: @products }
+        end
     end
 
     def show
         # @product = Product.find params[:id]
 
+        
         @reviews = @product.reviews.order(created_at: :desc)
         @review = Review.new
+
+        @favourite = @product.favourites.find_by(user: current_user)
 
         @product.update_columns(hit_count: @product.hit_count + 1)
     end
@@ -46,15 +60,15 @@ class ProductsController < ApplicationController
     def update
         # @product = Product.find params[:id]
 
-
         # @product.attributes = product_params
-        if @product.save#(validate: false)
+        # if @product.save(validate: false)
+        if @product.update product_params
             redirect_to product_path(@product.id)
         else
             render :edit
         end
-
-        # @product.update_columns(sale_price: @product.price)
+        
+        #@product.update_columns(sale_price: @product.price)
     end
 
     # def panel
@@ -67,9 +81,13 @@ class ProductsController < ApplicationController
 
     # end
 
+    def favourited
+        @products = current_user.favourited_products.all_with_review_counts.order(created_at: :desc)
+    end
+
     private
     def product_params
-        params.require(:product).permit(:title, :description, :price)
+        params.require(:product).permit(:title, :description, :price, :tag_names)
     end
 
     def find_product

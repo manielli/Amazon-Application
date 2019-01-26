@@ -36,6 +36,13 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'faker'
 gem 'cowsay'
 gem 'cancancan'
+gem 'bootstrap'
+gem 'jquery-rails'
+gem 'selectize-rails'
+gem 'delayed_job_active_record'
+gem 'delayed_job_web'
+gem 'active_model_serializers'
+gem 'rack-cors'
 
 
 group :development, :test do
@@ -56,6 +63,7 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'letter_opener'
 end
 
 

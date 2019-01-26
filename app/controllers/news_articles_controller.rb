@@ -1,6 +1,6 @@
 class NewsArticlesController < ApplicationController
     before_action :find_news_article, only: [:show, :edit, :update, :destroy]
-    before_action :authenticate_user!, only: [:new, :create, :destroy]
+    before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
 
     def new
         @news_article = NewsArticle.new

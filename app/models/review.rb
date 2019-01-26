@@ -2,6 +2,18 @@ class Review < ApplicationRecord
   belongs_to :product
   belongs_to :user
 
+  # To be able to get the user who have liked on a particular
+  # review
+  has_many :likers, through: :likes, source: :user
+
+  has_many :likes, dependent: :destroy
+
+  # To be able to get the users who have voted on a particular
+  # review
+  has_many :voters, through: :likes, source: :user
+  
+  has_many :votes,  dependent: :destroy
+
   # product
   # product=(associate)
   # build_product(attributes = {})

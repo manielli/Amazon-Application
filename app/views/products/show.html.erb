@@ -11,10 +11,33 @@
 <p>
     Created by: <%= @product.user&.full_name || "Delete" %>
 </p>
+<p>
+    <%#= Tags: %><%#= @product.tags.map{ |t| t.name }.join(", ") %>
+    <% unless @product.tags.empty? %>
+        <div>
+            <% @product.tags.each do |tag| %>
+                <%= link_to(tag.name, products_path(tag: tag.name), class: "badge badge-pill badge-primary") %>
+            <% end %>
+        </div>
+    <% end %>
+</p>
 
 <div>
     <small>
+        <% if @favourite.present? %>         
+            <%= link_to(favourite_path(@favourite), method: :delete) do %>
+                <i class="fas fa-star"></i> This product is in your favourites list
+            <% end %>
+        <% else %>
+            
+           <%= link_to(product_favourites_path(@product.id), method: :post) do %>
+                <i class="far fa-star"></i> Add this item to your favourites
+           <% end %>
+        <% end %>
+    </small>
+    <small>
         <% if can?(:edit, @product) %>
+        •
         <%= link_to(
             "Edit",
             edit_product_path(@product.id)
@@ -22,6 +45,7 @@
         <% end %>
 
         <% if can?(:delete, @product) %>
+        •
         <%= link_to(
             "Delete",
             product_path,
@@ -51,7 +75,7 @@
             rows: 10,
             placeholder: "What do you think of this strain?"
         ) %>
-    </div> <h5>Start rating (1 to 5 only):</h5>
+    </div> <h5>Star rating (1 to 5 only):</h5>
         <%= f.text_field (
             :rating
         ) %>
@@ -65,15 +89,83 @@
 <ul class="review-list">
 <% @reviews.each do |review| %>
 
-    <li>
+    <li id="<%= dom_id(review) %>" >
         <strong> <%= review.user.full_name %> reviewed: </strong> <br>
         <p> 
-            <%= review.body %>
+            <%= review.body %> <br>
+            •
+            <small> Reviewed <%= time_ago_in_words(review.created_at) %> ago </small>
+            •
+            <small> Rated <%= review.rating %> stars</small>
+            
+            <% if review.user_id %>
+            <small> by: <%= "#{review.user.first_name} #{review.user.last_name}" %></small>
+            <% end %>
+            <small> <br>
+                •
+                <% like = review.likes.find_by(user: current_user) %>
+                <% if like.present? %>
+                    <%= link_to("Unlike", like_path(like.id), method: :delete) %>
+                <% else %>
+                    <%= link_to("Like", review_likes_path(review.id), method: :post) %>               
+                <% end %>
+                <small>
+                    <%= pluralize(review.likes.count, "like") %>
+                </small>
+            </small>
+            <small>
+                <br>
+                <% vote = review.votes.find_by(user: current_user ) %>
+                <% if (vote.present? && vote.status == false) %>
+                    <%= link_to(vote_path(vote), method: :patch) do %>
+                        <i class="far fa-thumbs-up"></i> Up Vote
+                    <% end %>
+                <% elsif vote.present? && vote.status == true %>
+                    <%= link_to(vote_path(vote), method: :delete) do %>
+                        <i class="fas fa-thumbs-up"></i> Up Vote
+                    <% end %>
+                <% else %>
+                    <%= link_to(review_votes_path(review.id, status: true), method: :post) do %>
+                        <i class="far fa-thumbs-up"></i> Up Vote
+                    <% end %>
+                <% end %>
+                <small>
+                    <%= pluralize(review.votes.where(status: "true").count, "Upvote") %>
+                </small>
+            </small>
+            
+            <small>
+                
+                <% vote = review.votes.find_by(user: current_user) %>
+                <% if ( vote.present? && vote.status == true ) %>
+                    <%= link_to(vote_path(vote.id), method: :patch) do %>
+                        <i class="far fa-thumbs-down"></i> Down Vote
+                    <% end %>
+                <% elsif ( vote.present? && vote.status == false ) %>
+                    <%= link_to(vote_path(vote.id), method: :delete) do %>
+                        <i class="fas fa-thumbs-down"></i> Down Vote
+                    <% end %>
+                <% else %>
+                    <%= link_to(review_votes_path(review.id, status: false), method: :post) do %>
+                        <i class="far fa-thumbs-down"></i> Down Vote
+                    <% end %>
+                <% end %>
+                <small>
+                    <%= pluralize(review.votes.where(status: "false").count, "Downvote") %>
+                </small>
+            </small>
+            
+            <small>
+                <%#= pluralize(review.votes.count, "votes") %>
+            </small>
+            
             <% if can?(:delete, review) %>
+                <br>
+                •
                 <small>
             
                     <%= link_to(
-                        "Delete",
+                        "Delete Review",
                         product_review_path(@product.id, review.id),
                         method: :delete,
                         data: { 
@@ -82,15 +174,7 @@
                     ) %>
             
                 </small>
-                •
-            <% end %>
-            
-            <small> Reviewed <%= time_ago_in_words(review.created_at) %> ago </small>
-            •
-            <small> Rated at <%= review.rating %> </small>
-            <% if review.user_id %>
-            •
-            <small> Reviewed by: <%= "#{review.user.first_name} #{review.user.last_name}" %></small>
+                
             <% end %>
 
         </p>

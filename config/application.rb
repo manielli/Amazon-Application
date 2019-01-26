@@ -29,6 +29,17 @@ module AmazonApplication
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    config.active_job.queue_adapter = :delayed_job
+
+    config.middleware.insert_before(0, Rack::Cors) do
+      allow do
+        origins "localhost:3030", "127.0.0.1:3030"
+
+        resource("/api/*", headers: :any, credentials: true, methods: [:get, :post, :delete, :patch, :put, :options])
+      end
+    end
+
     config.generators.system do |g|
       g.helper = false
 

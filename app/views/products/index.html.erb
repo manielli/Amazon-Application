@@ -1,17 +1,12 @@
 <h1>List of All Products</h1>
 
-<ul class="product-list">
-    <% @products.each do |product| %>
-        <li>
-            <%= link_to(product.title, product_path(product.id)) %>
-            <small>
-            Price: $<%= product.price %>CAD
-            </small>
-            <br>
-            <small>
-            Reviewed <%= pluralize(product.reviews_count, "time") %>
-            </small>
-            <br>
-        </li>
-    <% end %>
-</ul>
+<% if @tag.present? %>
+    <h6>
+        Showing products tagged by:
+        <span class="badge badg-pill badge-primary" >
+            <%= @tag.name %>        
+        </span>
+    </h6>
+<% end %>
+
+<%= render "list" %>

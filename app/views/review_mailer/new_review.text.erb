@@ -1,0 +1,14 @@
+Hello <%= @owner.full_name %>
+
+You have received a new review on your product
+
+Product title: <%= @product.title %>
+
+The review: <%= @review.body %>
+The review was written by: <%= @reviewer %>
+
+<%= link_to("Click Here", "#{product_url(@product)}##{dom_id(@review)}") %> to view the review.
+
+Regards,
+
+Amazon Sales Team

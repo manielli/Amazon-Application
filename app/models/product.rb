@@ -1,6 +1,13 @@
 class Product < ApplicationRecord
     belongs_to :user
     
+    has_many :taggings, dependent: :destroy
+    has_many :tags, through: :taggings
+
+    has_many :favourites, dependent: :destroy
+    has_many :favouriters, through: :favourites, source: :user
+
+
     has_many(:reviews, dependent: :destroy)
 
     # reviews
@@ -75,6 +82,16 @@ class Product < ApplicationRecord
                 }
         end
         self.where("title || description ILIKE ?","%#{str}%") || self.where("description ILIKE ?", "%#{str}%")
+    end
+
+    def tag_names
+        self.tags.map{ |t| t.name }.join(", ")
+    end
+
+    def tag_names=(rhs)
+        self.tags = rhs.strip.split(/\s*,\s*/).map do |tag_name|
+            Tag.find_or_initialize_by(name: tag_name)
+        end
     end
     
     private

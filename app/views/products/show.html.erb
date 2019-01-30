@@ -1,3 +1,5 @@
+<%= javascript_pack_tag 'product-show' %>
+
 <h1> <%= @product.title %> </h1>
 
 <p> <%= @product.description %> </p>
@@ -167,9 +169,9 @@
                     <%= link_to(
                         "Delete Review",
                         product_review_path(@product.id, review.id),
-                        method: :delete,
+                        class: "review-delete-btn",
                         data: { 
-                            confirm: "Are you sure you want to retract your amazing review of the #{@product.title} strain?"
+                            id: review.id
                         }
                     ) %>
             

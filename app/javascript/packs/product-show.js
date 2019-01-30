@@ -1,4 +1,4 @@
-
+import anime from "animejs";
 // console.log("Product show javascript loaded");
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -18,7 +18,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "DELETE"
             }).then(() => {
                 // console.log("Review deleted");
-                document.querySelector(`#review_${reviewId}`).remove();
+                // document.querySelector(`#review_${reviewId}`).remove();
+                const reviewLi = document.querySelector(`#review_${reviewId}`);
+
+                anime({
+                    targets: reviewLi,
+                    opacity: 0,
+                    duration: 100,
+                    easing: "linear"
+                }).finished.then(() => {
+                    reviewLi.remove();
+                });
             });
         });
     });

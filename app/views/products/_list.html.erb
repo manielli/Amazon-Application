@@ -1,8 +1,15 @@
 <%= javascript_pack_tag 'product-index' %>
 
+<%= react_component("HelloWorld", {name: "Jon Snow"}) %>
+
 <ul class="product-list">
     <% @products.each do |product| %>
-        <li>
+        <li data-tippy="<%= product.description %>" 
+            data-tippy-animation="scale" 
+            data-tippy-duration="0"
+            data-tippy-delay="[500, 200]"
+            data-tippy-arrow="true" >
+
             <%= link_to(product.title, product_path(product.id)) %>
             <small>
             Price: $<%= product.price %>CAD

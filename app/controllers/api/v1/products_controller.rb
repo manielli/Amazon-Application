@@ -4,7 +4,7 @@ class Api::V1::ProductsController < Api::ApplicationController
     def create
         product = Product.new product_params
         product.user = current_user
-
+        
         if product.save
             render json: {id: product.id}
         else

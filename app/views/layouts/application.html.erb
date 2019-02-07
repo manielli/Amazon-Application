@@ -22,15 +22,14 @@
         |
         <%= link_to("Bill Splitter", bill_splitter_path) %>
         |
-        
+        <%= link_to("Products", products_path) %>
+        |
         <% if user_signed_in? %>
           <%= link_to("Favourited Product", favourited_products_path) %>
           |
           <%= link_to("New Product", new_product_path)%>
           |
-        <% end %>
-        <%= link_to("Products", products_path) %>
-        <% if user_signed_in? %>
+
           <%# | %>
           <%#= link_to( "Administrators Panel", admins_panel_path ) %>
           <%# | %> 
@@ -45,7 +44,6 @@
           }) %>
 
           <% else %>
-          |
           <%= link_to("Sign In", new_session_path) %>
           |
           <%= link_to("Sign Up", new_user_path) %>

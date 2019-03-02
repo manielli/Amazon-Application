@@ -36,7 +36,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'faker'
 gem 'cowsay'
 gem 'cancancan'
-gem 'bootstrap'
+gem "bootstrap"
 gem 'jquery-rails'
 gem 'selectize-rails'
 gem 'delayed_job_active_record'

@@ -68,5 +68,7 @@ Rails.application.routes.draw do
         get :current, on: :collection
       end
     end
+
+    match "*unmatched", via: :all, to: "application#not_found"
   end
 end

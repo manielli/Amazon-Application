@@ -10,7 +10,7 @@ class Review < ApplicationRecord
 
   # To be able to get the users who have voted on a particular
   # review
-  has_many :voters, through: :likes, source: :user
+  has_many :voters, through: :votes, source: :user
   
   has_many :votes,  dependent: :destroy
 
@@ -29,10 +29,4 @@ class Review < ApplicationRecord
       lesser_than_or_equal_to: 6,
       }
     )
-
-    private
-    def review_params
-      params.require(:review).permit(:body, :rating)
-    end
-
 end

@@ -42,13 +42,11 @@
             data: { 
               confirm: "Are you sure you want to Log Out?"
           }) %>
-
-          <% else %>
+        <% else %>
           <%= link_to("Sign In", new_session_path) %>
           |
           <%= link_to("Sign Up", new_user_path) %>
         <% end %>
-
       </nav>
     </header>
       <main class="container-fluid">

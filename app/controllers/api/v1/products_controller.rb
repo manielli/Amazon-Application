@@ -5,11 +5,14 @@ class Api::V1::ProductsController < Api::ApplicationController
         product = Product.new product_params
         product.user = current_user
         
-        if product.save
-            render json: {id: product.id}
-        else
-            render(json: {errors: product.errors}, status: 422)
-        end
+        # if product.save
+        #     render json: {id: product.id}
+        # else
+        #     render(json: {errors: product.errors}, status: 422)
+        # end
+
+        product.save!
+        render json: {id: product.id}
     end
     
     def index

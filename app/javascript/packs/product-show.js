@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 anime({
                     targets: reviewLi,
                     opacity: 0,
-                    duration: 100,
+                    duration: 1000,
                     easing: "linear"
                 }).finished.then(() => {
                     reviewLi.remove();
